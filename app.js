@@ -128,7 +128,7 @@ bot.on('message', message => {
 		setTimeout(() => {
 			// Removes the user from the set after a minute
 			spam.delete(sender.id);
-		}, 1000);
+		}, 60000);
 	}
 	
 	if (msg === prefix + 'POINTS'){
