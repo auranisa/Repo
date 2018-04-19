@@ -1,0 +1,6 @@
+Commands List :
+1. ping
+2. assalamualaikum
+3. userinfo
+4. level
+5. points
