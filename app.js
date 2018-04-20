@@ -1,3 +1,4 @@
+const cool = require('cool-ascii-faces')
 const express = require('express')
 const path = require('path')
 const PORT =  process.env.PORT || 5000
@@ -6,6 +7,7 @@ express()
   .use(express.static(path.join(__dirname, 'public')))
   .set('views', path.join(__dirname, 'views'))
   .set('view engine', 'ejs')
+  .get('/cool', (req, res) => res.send(cool()))
   .get('/', (req, res) => res.render('pages/index'))
   .listen(PORT, () => console.log(`Listening on ${ PORT }`))
 
@@ -146,6 +148,26 @@ bot.on('message', message => {
 		sql.get(`SELECT * FROM scores WHERE userId ="${message.author.id}"`).then(row => {
 			if (!row) return message.reply("sadly you do not have any points yet!");
 			message.reply(`you currently have ${row.points} points, good going!`);
+		});
+	}
+	
+	if (msg === prefix + 'RANK'){
+		sql.all(`SELECT * FROM scores ORDER BY points DESC`).then(rows => {
+			var leaderboard = '';
+			var i =1;
+			rows.forEach(function(row) {
+				var name = bot.users.get(row.userId);
+				var badges = getLevel(row.level);
+				leaderboard += `${i}. ${name}\nBadges: ${badges} Points: ${row.points}\n`;
+				i++;
+			})
+			message.channel.send({
+				embed: {
+					title: "Leaderboard",
+					color: 3447003,
+					description: `${leaderboard}`
+				}
+			});
 		});
 	}
 	
